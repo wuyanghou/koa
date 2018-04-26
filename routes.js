@@ -2,30 +2,58 @@
  * Created by luoming on 2018/4/25
  */
 
+const {checkLogin,getStudentInfo,deleteInfo,saveInfo}=require('./data');
 const Router =require('koa-router');
-// const router=new Router();
-
 //路由前缀
 const router = new Router({
     prefix: '/koa'
 });
-// router.get('/', async ()=>{}); // responds to "/users"
-// router.get('/:id', async ()=>{}); // responds to "/users/:id"
+// router.get('/', async ()=>{}); // responds to "/koa"
+// router.get('/:id', async ()=>{}); // responds to "/koa/:id"
 
-
-router.get('/',async(ctx,next)=>{
-    ctx.body=`<div><h1>hello world</h1> <img src='./img.jpg' alt=""></div>`;
-});
-router.get('/about/:name',async(ctx,next)=>{
-    // ctx.response.type = 'application/json';
-    ctx.response.body={name:'luoming'};
-});
-router.get('/login',async (ctx,next)=>{
-    ctx.body=ctx.query;
+router.get('/getInformation',async (ctx,next)=>{
+    let username=ctx.session.user;
+    let data=await getStudentInfo(`select * from student where teacher_email='${username}'`);
+    ctx.body={
+        username,
+        data
+    }
 })
-router.post('/login',async(ctx,next)=>{
-    let postData=ctx.request.body;
-    ctx.body=postData;
+router.get('/getInfomationById',async (ctx,next)=>{
+    let id=ctx.request.query.id;
+    let data=await getStudentInfo(`select * from student where id=${id}`);
+    ctx.body=data[0]
+})
+router.post('/deleteInfo',async(ctx,next)=>{
+    let id=ctx.request.body.id;
+    let res=await deleteInfo(`delete from student where id=${id}`);
+    ctx.body=true;
+})
+router.post('/saveInfo',async(ctx,next)=>{
+   let user=ctx.session.user;
+   let {name,age,phone,id}=ctx.request.body;
+   if(id){
+       let data =await saveInfo(`update student set name='${name}', age=${age}, phone='${phone}' where id=${id}`)
+   }else{
+       let data=await saveInfo(`insert into student (teacher_email,name,age,phone) values ('${user}','${name}',${age},'${phone}')`);
+   }
+    ctx.body=true;
+})
+router.post('/login',async (ctx,next)=>{
+    let email= ctx.request.body.email;
+    let  password= ctx.request.body.password;
+    let data= await checkLogin(`select * from user where email = '${email}'`);
+    if(data.length>0){
+        let randomNum=Math.random();
+        ctx.session.user = data[0]['email'];
+        ctx.session.id = data[0]['id'];
+        ctx.session.uuid = randomNum;
+        ctx.cookies.set('uuid', randomNum);
+        ctx.body={checked:true,message:''};
+    }else{
+        ctx.body={checked:false,message:'用户不存在'};
+    }
+
 })
 
 //原生代码支持jsonp  另外有 koa-jsonp中间件

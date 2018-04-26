@@ -4,11 +4,24 @@
 
 const path=require('path');
 const Koa = require('koa');
+const Session = require('koa-session-minimal');
+const MysqlStore = require('koa-mysql-session');
 const BodyParser=require('koa-bodyparser');
 const Static=require('koa-static');
+
 const router =require('./routes');
-const Log =require('./middleware');
+const {Log,CheckLogin} =require('./middleware');
 const app = new Koa();
+
+
+//session 存储配置
+const sessionMysqlConfig= require('./sql/config');
+
+//配置session中间件
+app.use(Session({
+    key: 'USER_SID',
+    store: new MysqlStore(sessionMysqlConfig)
+}))
 
 // 静态资源目录对于相对入口文件index.js的路径
 const staticPath = './static';
@@ -26,8 +39,9 @@ app.use(async (ctx,next)=>{
     // ctx.set('Access-Control-Allow-Credentials',true);
     // ctx.set('X-Powered-By','3.2.1');
     if(ctx.request.method=="OPTIONS") res.send(200);/*让options请求快速返回*/
-    else  next();
+    else  await next();
 })
+app.use(CheckLogin());
 app.use(Log());
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(3000,()=>{

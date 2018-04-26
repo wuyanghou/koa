@@ -2,13 +2,8 @@
  * Created by luoming on 2018/4/25
  */
 const mysql = require('mysql')
-
-const pool = mysql.createPool({
-    host     :  '127.0.0.1',
-    user     :  'luoming',
-    password :  'TYlm920606',
-    database :  'test'
-})
+const config= require('../sql/config')
+const pool = mysql.createPool(config)
 
 let query = ( sql, values )=> {
     return new Promise(( resolve, reject ) => {

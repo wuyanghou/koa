@@ -9,10 +9,24 @@
  * @constructor
  */
 const Log =()=>{
-    return function(ctx,next){
+    return async function(ctx,next){
         console.log(ctx.method,new Date());
-        next()
+        await next()
     }
 }
 
-module.exports=Log;
+const CheckLogin =()=>{
+    return async function (ctx,next){
+        if(ctx.request.path !=='/koa/login'){
+            if(ctx.cookies.get('uuid') && ctx.cookies.get('uuid')==ctx.session.uuid ){
+                await next();
+            }else{
+                ctx.status=401;
+            }
+        }else{
+            await next();
+        }
+    }
+}
+
+module.exports={Log,CheckLogin};

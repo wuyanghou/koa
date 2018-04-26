@@ -6,7 +6,9 @@
   "dependencies": {
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-mysql-session": "0.0.2",
     "koa-router": "^7.4.0",
+    "koa-session-minimal": "^3.0.4",
     "koa-static": "^4.0.2",
     "mysql": "^2.15.0"
   },
