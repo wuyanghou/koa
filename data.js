@@ -6,6 +6,9 @@ let {query} = require('./util/db');
 const checkLogin = async (sql) => {
     return await query(sql);
 }
+const register=async(sql)=>{
+    return await query(sql);
+}
 
 const getStudentInfo=async (sql)=>{
     return await query(sql);
@@ -18,4 +21,8 @@ const saveInfo=async (sql)=>{
     return await query(sql);
 }
 
-module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo};
+const checkSession=async (sql)=>{
+    return await query(sql);
+}
+
+module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo,checkSession,register};

@@ -8,9 +8,9 @@ const Session = require('koa-session-minimal');
 const MysqlStore = require('koa-mysql-session');
 const BodyParser=require('koa-bodyparser');
 const Static=require('koa-static');
-
 const router =require('./routes');
-const {Log,CheckLogin} =require('./middleware');
+const {query}=require('./util/db');
+const {Log,CheckSession} =require('./middleware');
 const app = new Koa();
 
 
@@ -20,8 +20,9 @@ const sessionMysqlConfig= require('./sql/config');
 //配置session中间件
 app.use(Session({
     key: 'USER_SID',
+    cookie: {maxAge:1800000},
     store: new MysqlStore(sessionMysqlConfig)
-}))
+}));
 
 // 静态资源目录对于相对入口文件index.js的路径
 const staticPath = './static';
@@ -41,9 +42,14 @@ app.use(async (ctx,next)=>{
     if(ctx.request.method=="OPTIONS") res.send(200);/*让options请求快速返回*/
     else  await next();
 })
-app.use(CheckLogin());
+app.use(CheckSession());
 app.use(Log());
 app.use(router.routes()).use(router.allowedMethods());
+
+setInterval(async()=>{
+   let currentTime =new Date().getTime();
+   await query(`delete from _mysql_session_store where expires <'${currentTime}'`)
+},600000)
 app.listen(3000,()=>{
     console.log('listening at 3000');
 });
