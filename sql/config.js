@@ -5,5 +5,5 @@ module.exports={
     host     :  '127.0.0.1',
     user     :  'luoming',
     password :  'TYlm920606',
-    database :  'test'
+    database :  'react-test'
 }

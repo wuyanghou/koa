@@ -25,4 +25,8 @@ const checkSession=async (sql)=>{
     return await query(sql);
 }
 
-module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo,checkSession,register};
+const alterPwd=async (sql)=>{
+    return await query(sql);
+}
+
+module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo,checkSession,register,alterPwd};

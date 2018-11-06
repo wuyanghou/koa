@@ -38,7 +38,6 @@ app.use(async (ctx,next)=>{
     ctx.set('Access-Control-Allow-Headers','Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
     ctx.set('Access-Control-Allow-Methods','PUT,POST,GET,DELETE,OPTIONS');
     // ctx.set('Access-Control-Allow-Credentials',true);
-    // ctx.set('X-Powered-By','3.2.1');
     if(ctx.request.method=="OPTIONS") res.send(200);/*让options请求快速返回*/
     else  await next();
 })
