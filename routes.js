@@ -163,7 +163,7 @@ router.get('/getOssKey', async (ctx, next) => {
     callbackPort,
     callbackPath
   } = config;
-  const host = `http://${bucket}.${region}.aliyuncs.com`; //你的oss完整地址
+  const host = `https://${bucket}.${region}.aliyuncs.com`; //你的oss完整地址
   const expireTime = new Date().getTime() + expAfter;
   const expiration = new Date(expireTime).toISOString();
   const policyString = JSON.stringify({
