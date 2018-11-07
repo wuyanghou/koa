@@ -18,7 +18,7 @@ const Log = () => {
 
 const CheckSession = () => {
   return async function (ctx, next) {
-    if (ctx.request.path !== '/koa/login' && ctx.request.path !== '/koa/register') {
+    if (ctx.request.path !== '/koa/login' && ctx.request.path !== '/koa/register' && ctx.request.path !=='/koa/ossCallback' ) {
       let currentTime = new Date().getTime();
       let sessionId = ctx.cookies.get('USER_SID');
       let data = [];

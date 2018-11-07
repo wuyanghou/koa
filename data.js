@@ -29,4 +29,12 @@ const alterPwd=async (sql)=>{
     return await query(sql);
 }
 
-module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo,checkSession,register,alterPwd};
+const getFileList=async(sql)=>{
+    return await query(sql);
+}
+
+const saveFile=async(sql)=>{
+    return await query((sql));
+}
+
+module.exports={checkLogin,getStudentInfo,deleteInfo,saveInfo,checkSession,register,alterPwd,getFileList,saveFile};
